@@ -1,0 +1,242 @@
+<!--
+clouds, bullet shoot
+
+To Do: convert cloud script for enemy spawn/land spawn, AI, collision
+-->
+<!DOCTYPE html>
+<html>
+    <head>
+         <title>Canvas Test</title>
+         <style>
+            
+            canvas {    
+             border: 3px #CCC solid;
+             padding-left: 0;
+             padding-right: 0;
+             margin-left: auto;
+             margin-right: auto;
+             display: block;
+             
+            }
+            
+        </style>
+        <meta charset="UTF-8" />
+    </head>
+    <body>
+
+        <div>
+            <canvas id="canvas" width="650" height="850">
+                This text is displayed if your browser 
+                does not support HTML5 Canvas.
+            </canvas>
+        </div>
+        <script src="//ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
+        <script type="text/javascript">
+                    //requestAnimationFrame: a browser API for getting smooth animations
+            window.requestAnimFrame = (function() {
+                return window.requestAnimationFrame ||
+                        window.webkitRequestAnimationFrame ||
+                        window.mozRequestAnimationFrame ||
+                        window.oRequestAnimationFrame ||
+                        window.msRequestAnimationFrame ||
+                        function (callback) {
+                            return window.setTimeout(callback, 1000 / 60);
+                    };
+             }) ();
+             
+             window.cancelRequestAnimFrame = (function(){
+            return window.cancelAnimationFrame ||
+                     window.webkitCancelRequestAnimationFrame ||
+                     window.mozCancelRequestAnimationFrame ||
+                     window.oCancelRequestAnimationFrame ||
+                     window.msCancelRequestAnimationFrame ||
+                     clearTimeout;
+         })();
+            var canvas;
+            var ctx;
+            var x = 150;
+            var y = 150;
+            var i = 0;
+            var dx = 2;
+            var dy = 4;
+            var WIDTH = 650;
+            var HEIGHT = 850;
+            var intervalId = 0;
+            var intervalcloud = 0;
+            var score = 0;
+            var paddlex;
+            var paddleh;
+            var paddlew;
+            var num = 0;
+            var clouds = [];
+            rightDown = false;
+            leftDown = false;
+            var start = true;
+            var canvasMinX = 0;
+            var canvasMaxX = 0;
+            var Bullet = [];
+            mousedown = false;
+            var imageObj = new Image();
+                imageObj.onload = function() { draw();
+                };
+                imageObj.src = 'cloud.png'; 
+        
+    
+        function MakeBullet()
+        {
+            Bullet.push({
+                pic: imageObj,
+                x: paddlex,
+                y: 825
+            });
+        }
+
+
+        function MakeClouds()
+        {
+             clouds.push({
+              pic: imageObj,
+              x: Math.random() * (WIDTH - 39),
+              y: Math.floor((Math.random()*-800)-100)
+              });    
+              
+               clouds.push({
+              pic: imageObj,
+              x: Math.random() * (WIDTH - 39),
+              y: Math.floor((Math.random()*-800)-100)
+              }); 
+        }
+
+            //set rightDown or leftDown if the right or left keys are down
+            function onKeyDown(evt) {
+                if (evt.keyCode == 68)
+                    rightDown = true;
+                else if (evt.keyCode == 65)
+                    leftDown = true;
+            }
+
+//and unset them when the right or left key is released
+            function onKeyUp(evt) {
+                if (evt.keyCode == 68)
+                    rightDown = false;
+                else if (evt.keyCode == 65)
+                    leftDown = false;
+            }
+            
+            
+            //mosue click
+            function onMouseDown()
+            {
+                MakeBullet();
+            }
+
+            $(document).keydown(onKeyDown);
+            $(document).keyup(onKeyUp);
+            $(document).click(onMouseDown);
+
+            function init_paddle() {
+                paddlex = WIDTH / 2;
+                paddleh = 10;
+                paddlew = 75;
+            }
+
+
+
+            function rect(x, y, w, h) {
+                ctx.beginPath();
+                ctx.rect(x, y, w, h);
+                ctx.closePath();
+                ctx.fill();
+            }
+
+            function init() {
+                ctx = $('#canvas')[0].getContext("2d");
+                paddlex = WIDTH / 2;
+
+                canvasMinX = $("#canvas").offset().left;
+                canvasMaxX = canvasMinX + WIDTH;
+
+            }
+
+            function clear() {
+                ctx.clearRect(0, 0, WIDTH, HEIGHT);
+            }
+            
+            function DrawClouds(j){     
+             for(j ; j <clouds.length; j++)
+        {
+         ctx.drawImage(clouds[j].pic, clouds[j].x, clouds[j].y);  
+         clouds[j].y ++;
+            if(clouds.length < 50){
+                    MakeClouds();
+            }
+           if(clouds[j].y > 900) {
+            clouds.splice(j, 1);
+            clouds.length --;
+            j --;
+        }
+        }  
+            }
+            
+             function DrawBullet(i){   
+                   num = i;
+             for(i ; i <Bullet.length; i++)
+        {
+         ctx.drawImage(Bullet[i].pic, Bullet[i].x, Bullet[i].y);
+         Bullet[i].y -= 4;
+               if(Bullet[i].y < -100) {
+            Bullet.splice(i, 1);
+            Bullet.length --;
+            i --;
+               }
+        
+        }  
+            }
+         
+            function draw() {
+                clear();
+                ctx.fillStyle = "#C0F0EF";
+                rect(0, 0, WIDTH, HEIGHT);
+              
+                ctx.fillStyle = "#444444";
+                if(start === true)
+                {
+                MakeClouds();
+                start = false;
+                }
+          DrawBullet(1);      
+        DrawClouds(1);
+              
+                
+        //move Plane left and right uses arrow keys as we are using space bar
+        // for fireing if we figure otu mosue click then we change it wo a/d
+                if (rightDown)
+                    paddlex += 5;
+                else if (leftDown)
+                    paddlex -= 5;
+                rect(paddlex, HEIGHT - paddleh, paddlew, paddleh);
+           
+          
+                ctx.fillStyle = "black";
+                ctx.font = "bold 16px Arial";
+                ctx.fillText("score: " + Bullet.length, 0, 15);
+            
+                if(paddlex > 850)
+                {
+                    paddlex = canvas.width - paddlew; 
+                }
+            }
+            init();
+            
+                   function animloop() {
+                        init = requestAnimFrame(animloop);
+                        draw();
+                    }
+                    
+                    animloop();
+            
+            init_paddle();
+        
+        </script>
+    </body>
+</html>
