@@ -67,7 +67,7 @@ To Do: convert cloud script for enemy spawn/land spawn, AI, collision
             var paddlex;
             var paddleh;
             var paddlew;
-            var num = 0;
+            var Timer = 0;
             var clouds = [];
             rightDown = false;
             leftDown = false;
@@ -75,6 +75,7 @@ To Do: convert cloud script for enemy spawn/land spawn, AI, collision
             var canvasMinX = 0;
             var canvasMaxX = 0;
             var Bullet = [];
+            var Land = [];
             mousedown = false;
             var imageObj = new Image();
                 imageObj.onload = function() { draw();
@@ -85,7 +86,22 @@ To Do: convert cloud script for enemy spawn/land spawn, AI, collision
                 bulletimg.onload = function() { draw();
                 };
                 bulletimg.src = 'Bullet.png'; 
+          
+            var landimg = new Image();
+                landimg.onload = function () { draw();
+                };
+                landimg.src =  'Land-place-holder.png';
+                
         
+        
+        function MakeLand()
+        {
+            Land.push({
+               pic: landimg,
+               x:  Math.random() * (WIDTH - 125),
+               y:  Math.floor((Math.random()*-800)-100)
+            });
+        }
         
     
         function MakeBullet()
@@ -196,7 +212,6 @@ To Do: convert cloud script for enemy spawn/land spawn, AI, collision
             }
             
              function DrawBullet(i){   
-                   num = i;
              for(i ; i <Bullet.length; i++)
         {
          ctx.drawImage(Bullet[i].pic, Bullet[i].x, Bullet[i].y);
@@ -205,24 +220,34 @@ To Do: convert cloud script for enemy spawn/land spawn, AI, collision
             Bullet.splice(i, 1);
             i --;
                }
-        
-        }  
-            }
-         
+             }  
+           }
          
                function DrawBulletTwo(i){   
-                   num = i;
              for(i ; i <Bullet.length; i++)
-        {
+             {
          ctx.drawImage(Bullet[i].pic, Bullet[i].x, Bullet[i].y);
          Bullet[i].y -= 5;
                if(Bullet[i].y < -100) {
             Bullet.splice(i, 1);
             i --;
                }
-        
-        }  
-            }
+            }  
+          }
+          
+                  function DrawLand (i){
+              for(i ; i < Land.length; i++)
+        {
+         ctx.drawImage(Land[i].pic, Land[i].x, Land[i].y);
+         Land[i].y +=0.8;
+               if(Land[i].y > 900) {
+            Land.splice(i, 1);
+            i --;
+               }
+             }    
+               
+           }
+           
             function draw() {
                 clear();
                 ctx.fillStyle = "#C0F0EF";
@@ -234,9 +259,16 @@ To Do: convert cloud script for enemy spawn/land spawn, AI, collision
                 MakeClouds();
                 start = false;
                 }
-          DrawBullet(1);   
+          DrawLand(0);
+          DrawClouds(1);
+            DrawBullet(1);   
           DrawBulletTwo(1);
-        DrawClouds(1);
+          Timer ++;
+        if(Timer > 500)
+            {
+                MakeLand();
+                Timer = 0;
+            }
               
                 
         //move Plane left and right uses arrow keys as we are using space bar
@@ -250,7 +282,7 @@ To Do: convert cloud script for enemy spawn/land spawn, AI, collision
           
                 ctx.fillStyle = "black";
                 ctx.font = "bold 16px Arial";
-                ctx.fillText("score: " + Bullet.length, 0, 15);
+                ctx.fillText("score: " + Timer, 0, 15);
             
                 if(paddlex + paddlew > 650)
                 {
