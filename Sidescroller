@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<!--
+To change this license header, choose License Headers in Project Properties.
+To change this template file, choose Tools | Templates
+and open the template in the editor.
+-->
+<html>
+    <head>
+        <title>TODO supply a title</title>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width">
+    </head>
+    <body>
+        <div><canvas id="canvas" width="500" height="400"> This text is displayed if your browser does not support HTML5 Canvas. </canvas></div>
+        
+        
+        <script src="//ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script> 
+        
+        
+        <script type='text/javascript'>
+            var canvas;
+            var ctx;
+            var WIDTH = 500;
+            var HEIGHT = 400;
+            var right = 250;
+            var left = 30;
+            var x = 150;
+            var x2 = 170;
+            var x3 = 160;
+            var x4 = 250;
+            var x5 = 300;
+            var x6 = 350;
+            var x7 = 450;
+            var y = 150;
+            var y2 = 140;
+            var y3 = 200;       
+            var dx = 1;
+            var dx2 = 0.5;
+            var dx3 = 10;
+            var dx4 = 5;
+            var ballr = 20;
+            var ballr2 = 100;
+            var intervalId = 0;
+            var rightDown = false;
+            var leftDown = false;
+            var jumpDown = false;
+            var paddlex;
+            var paddley;
+            var paddleh;
+            var paddlew;
+            
+             function circle(x,y,r){
+                ctx.beginPath();
+                ctx.arc(x, y, r, 0, Math.PI*2, true);
+                ctx.fill();
+            } 
+            
+            function rect(x,y,w,h){
+                ctx.beginPath();
+                ctx.rect(x,y,w,h);
+                ctx.closePath();
+                ctx.fill();
+             }
+            
+            function init_paddle() {
+                paddlex = WIDTH / 5;              
+                paddleh = 50;
+                paddlew = 75; 
+                paddley = HEIGHT - paddleh;
+            }
+            
+            function onKeyDown(evt){
+                if (evt.keyCode == 39)
+                    rightDown = true;
+                else if (evt.keyCode == 37)
+                    leftDown = true;
+              else if (evt.keyCode == 38)
+                    jumpDown = true; 
+                 
+            }
+            
+            
+            function onKeyUp(evt){
+                if (evt.keyCode == 39)
+                    rightDown = false;
+                else if (evt.keyCode == 37)
+                    leftDown = false;
+               else if (evt.keyCode == 38)
+                    jumpDown = false;  
+                
+                
+                
+                
+            } 
+            
+             $(document).keydown(onKeyDown);
+             $(document).keyup(onKeyUp);
+             
+              function init() {
+                
+                ctx = $('#canvas')[0].getContext("2d");
+                paddlex = WIDTH / 2;
+                paddley = HEIGHT; 
+                 
+               intervalId = setInterval(draw, 10);
+            }
+            function clear(){
+                ctx.clearRect(0, 0, WIDTH, HEIGHT);
+            }
+            function draw() {
+                clear();
+                ctx.fillStyle = "#3bb9ff";
+                rect(0, 0, WIDTH, HEIGHT);
+                ctx.fillStyle = "#ffff00";
+                 circle(x4, y2, ballr2); 
+                ctx.fillStyle = "#ffffff";
+                 circle(x, y, ballr);
+                ctx.fillStyle = "#ffffff";
+                 circle(x2, y, ballr); 
+                ctx.fillStyle = "#ffffff";
+                 circle(x3, y2, ballr);  
+                 ctx.fillStyle = "#888888";
+                rect(x5, y3, 30, 20);
+                 ctx.fillStyle = "#888888";
+                rect(x6, y3, 30, 20);
+                
+                
+                 
+           if (rightDown)
+                    paddlex += 5;
+                else if (leftDown)
+                    paddlex -= 5;
+               
+                ctx.fillStyle = "#ff00ff";
+                rect(paddlex, paddley, paddlew, paddleh);
+                ctx.fillStyle = "#7f5217";
+                rect(x7, 0, 10, HEIGHT);
+                if( paddlex >= right &&  rightDown)
+                    {
+                        paddlex = right;
+                        x  += -dx;
+                        x2 += -dx;
+                        x3 += -dx;
+                        x4 += -dx2;
+                        x5 += -dx4;
+                        x6 += -dx4;
+                        x7 += -dx3;
+                    }
+                if( paddlex <= left && leftDown)
+                    {
+                        paddlex = left;
+                         x  += dx;
+                         x2 += dx;
+                         x3 += dx;
+                         x4 += dx2;
+                         x5 += dx4;
+                         x6 += dx4;
+                         x7 += dx3;
+                    }   
+                
+               
+            }
+            init();
+            init_paddle(); 
+            
+            
+        </script>
+    </body>
+</html>
