@@ -293,6 +293,17 @@ To Do: convert cloud script for enemy spawn/land spawn, AI, collision
                 {
                     paddlex = 0; 
                 }
+                if(paddlex >= WIDTH && rightDown)
+                {
+                    paddlex = WIDTH;
+                    
+                }
+                if(paddlex <= 0 && leftDown)
+                {
+                    paddlex = 0;
+                    
+                }
+                
             }
             init();
             
