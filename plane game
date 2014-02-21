@@ -80,16 +80,32 @@ To Do: convert cloud script for enemy spawn/land spawn, AI, collision
                 imageObj.onload = function() { draw();
                 };
                 imageObj.src = 'cloud.png'; 
+                
+            var bulletimg = new Image();
+                bulletimg.onload = function() { draw();
+                };
+                bulletimg.src = 'Bullet.png'; 
+        
         
     
         function MakeBullet()
         {
             Bullet.push({
-                pic: imageObj,
-                x: paddlex,
+                pic: bulletimg,
+                x: paddlex + paddlew /4,
                 y: 825
             });
         }
+        
+             function MakeBulletTwo()
+        {
+            Bullet.push({
+                pic: bulletimg,
+                  x: paddlex + paddlew /1.5 ,
+                y: 825
+            });
+        }
+
 
 
         function MakeClouds()
@@ -128,6 +144,7 @@ To Do: convert cloud script for enemy spawn/land spawn, AI, collision
             function onMouseDown()
             {
                 MakeBullet();
+                MakeBulletTwo();
             }
 
             $(document).keydown(onKeyDown);
@@ -183,16 +200,29 @@ To Do: convert cloud script for enemy spawn/land spawn, AI, collision
              for(i ; i <Bullet.length; i++)
         {
          ctx.drawImage(Bullet[i].pic, Bullet[i].x, Bullet[i].y);
-         Bullet[i].y -= 4;
+         Bullet[i].y -= 5;
                if(Bullet[i].y < -100) {
             Bullet.splice(i, 1);
-            Bullet.length --;
             i --;
                }
         
         }  
             }
          
+         
+               function DrawBulletTwo(i){   
+                   num = i;
+             for(i ; i <Bullet.length; i++)
+        {
+         ctx.drawImage(Bullet[i].pic, Bullet[i].x, Bullet[i].y);
+         Bullet[i].y -= 5;
+               if(Bullet[i].y < -100) {
+            Bullet.splice(i, 1);
+            i --;
+               }
+        
+        }  
+            }
             function draw() {
                 clear();
                 ctx.fillStyle = "#C0F0EF";
@@ -204,7 +234,8 @@ To Do: convert cloud script for enemy spawn/land spawn, AI, collision
                 MakeClouds();
                 start = false;
                 }
-          DrawBullet(1);      
+          DrawBullet(1);   
+          DrawBulletTwo(1);
         DrawClouds(1);
               
                 
@@ -221,9 +252,14 @@ To Do: convert cloud script for enemy spawn/land spawn, AI, collision
                 ctx.font = "bold 16px Arial";
                 ctx.fillText("score: " + Bullet.length, 0, 15);
             
-                if(paddlex > 850)
+                if(paddlex + paddlew > 650)
                 {
-                    paddlex = canvas.width - paddlew; 
+                    paddlex = WIDTH - paddlew; 
+                }
+                
+                if(paddlex < 0)
+                {
+                    paddlex = 0; 
                 }
             }
             init();
