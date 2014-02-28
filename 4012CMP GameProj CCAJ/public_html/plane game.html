@@ -105,12 +105,12 @@ To Do: convert cloud script for enemy spawn/land spawn, AI, collision
         }
         
     
-       function MakeBullet()
+function MakeBullet()
         {
             Bullet.push({
                 pic: bulletimg,
-                x: paddlex - 195,
-                y: paddley - 90
+                x: paddlex + paddlew /4,
+                y: 825
             });
         }
         
@@ -118,11 +118,10 @@ To Do: convert cloud script for enemy spawn/land spawn, AI, collision
         {
             Bullet.push({
                 pic: bulletimg,
-                  x: paddlex - 140,
-                y: paddley - 90
+                  x: paddlex + paddlew /1.5 ,
+                y: 825
             });
         }
-
 
 
         function MakeClouds()
