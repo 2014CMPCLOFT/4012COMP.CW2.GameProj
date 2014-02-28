@@ -65,6 +65,7 @@ To Do: convert cloud script for enemy spawn/land spawn, AI, collision
             var intervalcloud = 0;
             var score = 0;
             var paddlex;
+            var paddley;
             var paddleh;
             var paddlew;
             var Timer = 0;
@@ -104,12 +105,12 @@ To Do: convert cloud script for enemy spawn/land spawn, AI, collision
         }
         
     
-        function MakeBullet()
+       function MakeBullet()
         {
             Bullet.push({
                 pic: bulletimg,
-                x: paddlex + paddlew /4,
-                y: 825
+                x: paddlex - 195,
+                y: paddley - 90
             });
         }
         
@@ -117,8 +118,8 @@ To Do: convert cloud script for enemy spawn/land spawn, AI, collision
         {
             Bullet.push({
                 pic: bulletimg,
-                  x: paddlex + paddlew /1.5 ,
-                y: 825
+                  x: paddlex - 140,
+                y: paddley - 90
             });
         }
 
@@ -170,6 +171,7 @@ To Do: convert cloud script for enemy spawn/land spawn, AI, collision
             function init_paddle() {
                 paddlex = WIDTH / 2;
                 paddleh = 10;
+                paddley = HEIGHT - paddleh;
                 paddlew = 75;
             }
 
@@ -211,16 +213,25 @@ To Do: convert cloud script for enemy spawn/land spawn, AI, collision
         }  
             }
             
+            function increaseSpd(){
+              if(Bullet[i].y <= WIDTH / 2)
+              {Bullet[i].y -= 4; }         
+            }
              function DrawBullet(i){   
              for(i ; i <Bullet.length; i++)
         {
          ctx.drawImage(Bullet[i].pic, Bullet[i].x, Bullet[i].y);
          Bullet[i].y -= 5;
+         increaseSpd(); 
                if(Bullet[i].y < -100) {
             Bullet.splice(i, 1);
             i --;
+            
                }
-             }  
+              if(Bullet[i].y <= paddley - 200)
+              {Bullet[i].y -= 4; } 
+             }
+             
            }
           
                function DrawBulletTwo(i){   
@@ -228,11 +239,18 @@ To Do: convert cloud script for enemy spawn/land spawn, AI, collision
              {
          ctx.drawImage(Bullet[i].pic, Bullet[i].x, Bullet[i].y);
          Bullet[i].y -= 5;
+         increaseSpd();
                if(Bullet[i].y < -100) {
             Bullet.splice(i, 1);
             i --;
+            
+       
                }
+               if(Bullet[i].y <= paddley - 200)
+              {Bullet[i].y -= 4; } 
             }  
+            
+            
           }
           
                   function DrawLand (i){
