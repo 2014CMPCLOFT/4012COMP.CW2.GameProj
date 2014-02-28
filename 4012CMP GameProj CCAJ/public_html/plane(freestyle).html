@@ -88,17 +88,17 @@ To Do: convert cloud script for enemy spawn/land spawn, AI, collision
             var imageObj = new Image();
                 imageObj.onload = function() { draw();
                 };
-                imageObj.src = 'images/cloud.png'; 
+                imageObj.src = 'cloud.png'; 
                 
             var bulletimg = new Image();
                 bulletimg.onload = function() { draw();
                 };
-                bulletimg.src = 'images/Bullet.png'; 
+                bulletimg.src = 'Bullet.png'; 
           
             var landimg = new Image();
                 landimg.onload = function () { draw();
                 };
-                landimg.src =  'images/Land-place-holder.png';
+                landimg.src =  'Land-place-holder.png';
                 
         function init_paddle() {            
                 paddleh = 10;
@@ -118,12 +118,12 @@ To Do: convert cloud script for enemy spawn/land spawn, AI, collision
         }
         
     
-        function MakeBullet()
+function MakeBullet()
         {
             Bullet.push({
                 pic: bulletimg,
-                x: paddlex - 195,
-                y: paddley - 90
+                x: paddlex + paddlew /4,
+                y: paddley-paddleh
             });
         }
         
@@ -131,8 +131,8 @@ To Do: convert cloud script for enemy spawn/land spawn, AI, collision
         {
             Bullet.push({
                 pic: bulletimg,
-                  x: paddlex - 140,
-                y: paddley - 90
+                  x: paddlex + paddlew /1.5 ,
+                y: paddley-paddleh
             });
         }
 
@@ -175,14 +175,7 @@ To Do: convert cloud script for enemy spawn/land spawn, AI, collision
                     upDown = true;
                 else if (evt.keyCode == 83)
                     downDown = true;
-               else if (evt.keyCode == 68 && 87)
-                    uprightDown = true;
-                else if (evt.keyCode == 65 && 87)
-                    upleftDown = true;
-               else if (evt.keyCode == 68 && 83)
-                    downrightDown = true;
-                else if (evt.keyCode == 65 && 83)
-                    downleftDown = true;
+               
             }
 
 //and unset them when the up, down, right or left key is released
@@ -195,14 +188,7 @@ To Do: convert cloud script for enemy spawn/land spawn, AI, collision
                     upDown = false;
                 else if (evt.keyCode == 83)
                     downDown = false;
-                else if (evt.keyCode == 68 && 87)
-                    uprightDown = false;
-                else if (evt.keyCode == 65 && 87)
-                    upleftDown = false;
-               else if (evt.keyCode == 68 && 83)
-                    downrightDown = false;
-                else if (evt.keyCode == 65 && 83)
-                    downleftDown = false;
+               
             }
             
             
@@ -279,6 +265,10 @@ To Do: convert cloud script for enemy spawn/land spawn, AI, collision
               if(Bullet[i].y <= WIDTH / 2)
               {Bullet[i].y -= 4; }         
             }
+             function increaseSpd(){
+              if(Bullet[i].y <= WIDTH / 2)
+              {Bullet[i].y -= 4; }         
+            }
              function DrawBullet(i){   
              for(i ; i <Bullet.length; i++)
         {
@@ -292,6 +282,8 @@ To Do: convert cloud script for enemy spawn/land spawn, AI, collision
                }
               if(Bullet[i].y <= paddley - 200)
               {Bullet[i].y -= 4; } 
+              if(Bullet[i].y <= paddley - 400)
+              {Bullet[i].y -= 5; } 
              }
              
            }
@@ -310,6 +302,8 @@ To Do: convert cloud script for enemy spawn/land spawn, AI, collision
                }
                if(Bullet[i].y <= paddley - 200)
               {Bullet[i].y -= 4; } 
+              if(Bullet[i].y <= paddley - 400)
+              {Bullet[i].y -= 5; } 
             }  
             
             
@@ -360,7 +354,9 @@ To Do: convert cloud script for enemy spawn/land spawn, AI, collision
                    {paddlex += 5;}
                 else if (leftDown)
                    {paddlex -= 5;}
-                else if (upDown)
+                   
+                   
+                 if (upDown)
                    {paddley -= 5;}
                 else if (downDown)
                    {paddley += 5;}
