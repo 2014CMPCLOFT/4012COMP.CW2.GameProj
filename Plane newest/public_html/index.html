@@ -65,6 +65,7 @@ To Do: convert cloud script for enemy spawn/land spawn, AI, collision
             var score = 0;
             var i = 0;
             var paddlex;
+            var paddley;
             var paddleh;
             var paddlew;
             var Timer = 0;
@@ -73,6 +74,8 @@ To Do: convert cloud script for enemy spawn/land spawn, AI, collision
             var clouds2 = [];
             rightDown = false;
             leftDown = false;
+            upDown = false;
+            downDown = false;
             var start = true;
             var canvasMinX = 0;
             var canvasMaxX = 0;
@@ -84,7 +87,7 @@ To Do: convert cloud script for enemy spawn/land spawn, AI, collision
             var Land2 = [];
             var temp = 0;
             var EnemyPlanex = 0;
-            var EnemyPaney = 0;
+            var EnemyPlaney = 0;
             var Health = 10;
             var EnemyHealth = 0;
             var num = 0;
@@ -154,7 +157,7 @@ To Do: convert cloud script for enemy spawn/land spawn, AI, collision
             Bullet.push({
                 pic: bulletimg,
                 x: paddlex+2,
-                y: 590
+                y: paddley
             });
         }
         
@@ -176,20 +179,29 @@ To Do: convert cloud script for enemy spawn/land spawn, AI, collision
               y: Math.floor((Math.random()*-800)-100)
               });    
         }
-        //set rightDown or leftDown if the right or left keys are down
+        //set xDown if the WASD keys are down
         function onKeyDown(evt) {
-            if (evt.keyCode == 68)
+            if (evt.keyCode === 68)
                  rightDown = true;
-            else if (evt.keyCode == 65)
+            else if (evt.keyCode === 65)
                  leftDown = true;
+            if (evt.keyCode === 87)
+                upDown = true;
+            else if (evt.keyCode === 83)
+                downDown = true;
             }
 
-//and unset them when the right or left key is released
+
+//and unset them when the any key is released
         function onKeyUp(evt) {
-            if (evt.keyCode == 68)
+            if (evt.keyCode === 68)
                  rightDown = false;
-            else if (evt.keyCode == 65)
+            else if (evt.keyCode === 65)
                  leftDown = false;
+            if (evt.keyCode === 87)
+                upDown = false;
+            else if (evt.keyCode === 83)
+                downDown = false;
             }
             
             //mosue click
@@ -205,9 +217,11 @@ To Do: convert cloud script for enemy spawn/land spawn, AI, collision
             $(document).click(onMouseDown);
 
          function init_paddle() {
-               paddlex = WIDTH / 2;
                paddleh = 10;
                paddlew = 75;
+               paddlex = WIDTH / 2;
+               paddley = HEIGHT - paddleh;
+
             }
 
          function rect(x, y, w, h) {
@@ -220,6 +234,7 @@ To Do: convert cloud script for enemy spawn/land spawn, AI, collision
          function init() {
                ctx = $('#canvas')[0].getContext("2d");
                paddlex = WIDTH / 2;
+               paddley = HEIGHT /2;
                canvasMinX = $("#canvas").offset().left;
                canvasMaxX = canvasMinX + WIDTH;
 
@@ -309,7 +324,7 @@ To Do: convert cloud script for enemy spawn/land spawn, AI, collision
 
            function draw() {
                 clear();
-                ctx.fillStyle = "#C0F0EF";
+                ctx.fillStyle = "#2952CC";
                 rect(0, 0, WIDTH, HEIGHT);
               
                 ctx.fillStyle = "#444444";
@@ -415,12 +430,16 @@ To Do: convert cloud script for enemy spawn/land spawn, AI, collision
                     paddlex += 10;
                 else if (leftDown)
                     paddlex -= 10;
-                    ctx.drawImage(Plane, paddlex, 590);
+                if (upDown)
+                    paddley -= 10;
+                else if (downDown)
+                    paddley += 10;
+                    ctx.drawImage(Plane, paddlex, paddley);
                 ctx.fillStyle = "black";
                 ctx.font = "bold 16px Arial";
                 ctx.fillText("score: " + num, 0, 15);
             
-                if(paddlex + paddlew > 650)
+                if(paddlex + paddlew > WIDTH)
                 {
                     paddlex = WIDTH - paddlew; 
                 }
@@ -428,6 +447,15 @@ To Do: convert cloud script for enemy spawn/land spawn, AI, collision
                 if(paddlex < 0)
                 {
                     paddlex = 0; 
+                }
+                
+                if(paddley + paddleh > HEIGHT)
+                {
+                    paddley = HEIGHT - paddleh;
+                }
+                if(paddley < 0)
+                {
+                    paddely = 0 + paddleh;
                 }
                 
             }
